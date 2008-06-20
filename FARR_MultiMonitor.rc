@@ -123,8 +123,8 @@ BEGIN
     CONTROL         "Move relative to screen resolution",IDC_CHECK_MOVE_RELATIVE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,20,125,10
     CONTROL         "Keep FARR centered",IDC_CHECK_CENTER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,54,83,10
-    CONTROL         "Threshold",IDC_CHECK_THRESHOLD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,67,47,10
-    EDITTEXT        IDC_EDIT_THRESHOLD,68,65,54,14,ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "Threshold",IDC_CHECK_THRESHOLD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,67,43,10
+    EDITTEXT        IDC_EDIT_THRESHOLD,69,66,54,14,ES_AUTOHSCROLL | ES_NUMBER
     LTEXT           "pixels",IDC_STATIC,128,68,19,8
 END
 
@@ -165,7 +165,6 @@ END
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE 9, 1
 #pragma code_page(1252)
-#include "res\FARR_MultiMonitor.rc2"  // non-Microsoft Visual C++ edited resources
 #include "afxres.rc"     // Standard components
 #endif
 

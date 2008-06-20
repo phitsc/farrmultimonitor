@@ -148,17 +148,20 @@ BOOL CALLBACK FindFarrWindow(HWND hwnd, LPARAM /*lParam*/)
 {
     DWORD processId = 0;
     DWORD threadId = GetWindowThreadProcessId(hwnd, &processId);
-    if((processId == farrProcessId) && (GetWindowLong(hwnd, GWL_STYLE) & WS_THICKFRAME))
+    if(processId == farrProcessId)
     {
-        farrThreadId = threadId;
-        farrWindowHandle = hwnd;
+        char windowTitle[100];
+        GetWindowText(hwnd, windowTitle, 100);
+        if(strstr(windowTitle, "Find and Run Robot v2") != 0)
+        {
+            farrThreadId = threadId;
+            farrWindowHandle = hwnd;
 
-        return TRUE;
+            return FALSE;
+        }
     }
-    else
-    {
-        return TRUE;
-    }
+
+    return TRUE;
 }
 
 //-----------------------------------------------------------------------
@@ -167,7 +170,7 @@ void createMultiMonitorPlugin()
 {
     if(farrWindowHandle != 0)
     {
-        SetWindowsHookEx(WH_CALLWNDPROC, (HOOKPROC)HookFunction, dllInstanceHandle, 0);
+        messageHook = SetWindowsHookEx(WH_CALLWNDPROC, (HOOKPROC)HookFunction, dllInstanceHandle, 0);
 
         char modulePath[MAX_PATH] = { 0 };
         GetModuleFileName(dllInstanceHandle, modulePath, MAX_PATH);
@@ -175,7 +178,9 @@ void createMultiMonitorPlugin()
 
         multiMonitorPlugin = new MultiMonitorPlugin(farrWindowHandle, modulePath);
 
-        OutputDebugString("FARR_MultiMonitor plugin initialized\n");
+        std::stringstream stream;
+        stream << "FARR_MultiMonitor plugin initialized. FARR window handle: " << std::hex << farrWindowHandle << "\n";
+        OutputDebugString(stream.str().c_str());
     }
 }
 
@@ -191,7 +196,10 @@ BOOL MyPlugin_DoInit()
 
 BOOL MyPlugin_DoShutdown()
 {
-    UnhookWindowsHookEx(messageHook);
+    if(messageHook != 0)
+    {
+        UnhookWindowsHookEx(messageHook);
+    }
 
     delete multiMonitorPlugin;
     multiMonitorPlugin = 0;
