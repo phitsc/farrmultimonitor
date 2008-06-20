@@ -20,6 +20,7 @@ struct Options
     void update(const OptionsFile& optionsFile);
 
     bool enableMultiMon;
+    bool showOnMonitorWithMouse;
     bool moveRelative;
     bool resizeRelative;
     bool center;
@@ -42,7 +43,8 @@ private:
     void handleShowWindow();
     void handleWindowPosChanging(const WINDOWPOS& windowPos);
 
-    const util::DisplayDevice* MultiMonitorPlugin::getDisplayDevice(const util::DisplayDevices& displayDevices, HWND hWnd);
+    static const util::DisplayDevice* getDisplayDevice(const util::DisplayDevices& displayDevices, HWND hWnd);
+    static const util::DisplayDevice* getDisplayDeviceContainingMouse(const util::DisplayDevices& displayDevices);
 
     HWND _farrWindowHandle;
 

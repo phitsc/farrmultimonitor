@@ -19,6 +19,7 @@ Options::Options(const OptionsFile& optionsFile)
 void Options::update(const OptionsFile& optionsFile)
 {
     enableMultiMon = optionsFile.getValue("EnableMultiMonitor", true);
+    showOnMonitorWithMouse = optionsFile.getValue("ShowOnMonitorWithMouse", false);
     moveRelative = optionsFile.getValue("MoveRelative", true);
     resizeRelative = optionsFile.getValue("ResizeRelative", true);
     center = optionsFile.getValue("Center", false);
@@ -44,9 +45,17 @@ const util::DisplayDevice* MultiMonitorPlugin::getDisplayDevice(const util::Disp
     GetWindowRect(hWnd, &windowRect);
     int x = windowRect.left + (windowRect.right - windowRect.left) / 2;
 
-    const util::DisplayDevice* newDisplayDevice = displayDevices.getDisplayDeviceContainingX(x);
+    return displayDevices.getDisplayDeviceContainingX(x);
+}
 
-    return newDisplayDevice;
+//-----------------------------------------------------------------------
+
+const util::DisplayDevice* MultiMonitorPlugin::getDisplayDeviceContainingMouse(const util::DisplayDevices& displayDevices)
+{
+    POINT mousePosition = { 0 };
+    GetCursorPos(&mousePosition);
+
+    return displayDevices.getDisplayDeviceContainingX(mousePosition.x);
 }
 
 //-----------------------------------------------------------------------
@@ -92,7 +101,10 @@ void MultiMonitorPlugin::handleShowWindow()
         HWND foregroundWindow = GetForegroundWindow();
 
         const util::DisplayDevice* currentDisplayDevice = getDisplayDevice(displayDevices, _farrWindowHandle);
-        const util::DisplayDevice* newDisplayDevice = getDisplayDevice(displayDevices, foregroundWindow);
+        
+        const util::DisplayDevice* newDisplayDevice = ((foregroundWindow == 0) || (_options.showOnMonitorWithMouse)) ?
+            getDisplayDeviceContainingMouse(displayDevices) :
+            getDisplayDevice(displayDevices, foregroundWindow);
 
         if((currentDisplayDevice != 0) && (newDisplayDevice != 0))
         {
