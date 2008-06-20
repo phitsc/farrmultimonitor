@@ -27,3 +27,9 @@
 #endif
 
 #include <windows.h>
+
+#include <atlbase.h>
+#include <atlapp.h>
+#include <atlwin.h>
+#include <atlctrls.h>
+#include <atlmisc.h>

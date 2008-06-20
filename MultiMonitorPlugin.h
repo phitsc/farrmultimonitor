@@ -23,6 +23,8 @@ struct Options
     bool moveRelative;
     bool resizeRelative;
     bool center;
+    bool enableThreshold;
+    long threshold;
 };
 
 //-----------------------------------------------------------------------
@@ -42,15 +44,13 @@ private:
 
     const util::DisplayDevice* MultiMonitorPlugin::getDisplayDevice(const util::DisplayDevices& displayDevices, HWND hWnd);
 
-    static int getWidth(const RECT& rect);
-    static int getHeight(const RECT& rect);
-
     HWND _farrWindowHandle;
 
     OptionsFile _optionsFile;
     Options     _options;
 
-    bool          _isVisible;
+    bool        _isVisible;
+    CRect       _oldWindowRect;
 };
 
 //-----------------------------------------------------------------------

@@ -53,7 +53,7 @@
 #define ThisPlugin_VersionString		"0.0.0.1"
 #define ThisPlugin_ReleaseDateString	"June 12, 2008"
 #define ThisPlugin_Author			    "Philipp Tschannen (phitsc)"
-#define ThisPlugin_HomepageURL			""
+#define ThisPlugin_HomepageURL			"http://farrmultimonitor.origo.ethz.ch"
 #define ThisPlugin_UpdateURL			""
 #define ThisPlugin_ShortDescription		"Adds support for multiple monitors."
 #define ThisPlugin_LongDescription		"Adds support for multiple monitors."

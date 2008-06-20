@@ -136,7 +136,7 @@ LRESULT CALLBACK HookFunction(int code, WPARAM wParam, LPARAM lParam)
 
     CWPSTRUCT* cwp = (CWPSTRUCT*)lParam;
 
-    if(cwp->hwnd == farrWindowHandle)
+    if((cwp->hwnd == farrWindowHandle) && (multiMonitorPlugin != 0))
     {
         multiMonitorPlugin->handleMessage(cwp->message, cwp->wParam, cwp->lParam);
     }
@@ -191,10 +191,10 @@ BOOL MyPlugin_DoInit()
 
 BOOL MyPlugin_DoShutdown()
 {
+    UnhookWindowsHookEx(messageHook);
+
     delete multiMonitorPlugin;
     multiMonitorPlugin = 0;
-
-    UnhookWindowsHookEx(messageHook);
 
     OutputDebugString("FARR_MultiMonitor plugin shutdown\n");
 

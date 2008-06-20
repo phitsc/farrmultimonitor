@@ -5,6 +5,8 @@
 #include "OptionsDialog.h"
 #include "OptionsFile.h"
 
+#include <algorithm>
+
 //-----------------------------------------------------------------------
 
 Options::Options(const OptionsFile& optionsFile)
@@ -20,6 +22,8 @@ void Options::update(const OptionsFile& optionsFile)
     moveRelative = optionsFile.getValue("MoveRelative", true);
     resizeRelative = optionsFile.getValue("ResizeRelative", true);
     center = optionsFile.getValue("Center", false);
+    enableThreshold = optionsFile.getValue("EnableThreshold", false);
+    threshold = optionsFile.getValue("Threshold", 0L);
 }
 
 //-----------------------------------------------------------------------
@@ -43,20 +47,6 @@ const util::DisplayDevice* MultiMonitorPlugin::getDisplayDevice(const util::Disp
     const util::DisplayDevice* newDisplayDevice = displayDevices.getDisplayDeviceContainingX(x);
 
     return newDisplayDevice;
-}
-
-//-----------------------------------------------------------------------
-
-int MultiMonitorPlugin::getWidth(const RECT& rect)
-{
-    return (rect.right - rect.left);
-}
-
-//-----------------------------------------------------------------------
-
-int MultiMonitorPlugin::getHeight(const RECT& rect)
-{
-    return (rect.bottom - rect.top);
 }
 
 //-----------------------------------------------------------------------
@@ -106,30 +96,30 @@ void MultiMonitorPlugin::handleShowWindow()
 
         if((currentDisplayDevice != 0) && (newDisplayDevice != 0))
         {
-            RECT windowRect = { 0 };
+            CRect windowRect;
             GetWindowRect(_farrWindowHandle, &windowRect);
 
-            const RECT& oldDisplayRect = currentDisplayDevice->getPositionAndSize();
-            const RECT& newDisplayRect = newDisplayDevice->getPositionAndSize();
+            const CRect oldDisplayRect = currentDisplayDevice->getPositionAndSize();
+            const CRect newDisplayRect = newDisplayDevice->getPositionAndSize();
 
             const int xOffset = windowRect.left - oldDisplayRect.left;
             const int yOffset = windowRect.top - oldDisplayRect.top;
 
-            const double xRatio = (double)getWidth(newDisplayRect) / (double)getWidth(oldDisplayRect);
-            const double yRatio = (double)getHeight(newDisplayRect) / (double)getHeight(oldDisplayRect);
+            const double xRatio = (double)newDisplayRect.Width() / (double)oldDisplayRect.Width();
+            const double yRatio = (double)newDisplayRect.Height() / (double)oldDisplayRect.Height();
 
             int newLeft = 0;
             int newTop = 0;
             int newRight = 0;
             int newBottom = 0;
 
-            const int newWidth = (int)((getWidth(windowRect) * (_options.resizeRelative ? xRatio : 1)));
-            const int newHeight = (int)((getHeight(windowRect) * (_options.resizeRelative ? yRatio : 1)));
+            const int newWidth = (int)((windowRect.Width() * (_options.resizeRelative ? xRatio : 1)));
+            const int newHeight = (int)((windowRect.Height() * (_options.resizeRelative ? yRatio : 1)));
 
             if(_options.center)
             {
-                newLeft = newDisplayRect.left + (getWidth(newDisplayRect) - newWidth) / 2;
-                newTop = newDisplayRect.top + (getHeight(newDisplayRect) - newHeight) / 2;
+                newLeft = newDisplayRect.left + (newDisplayRect.Width() - newWidth) / 2;
+                newTop = newDisplayRect.top + (newDisplayRect.Height() - newHeight) / 2;
             }
             else
             {
@@ -153,21 +143,29 @@ void MultiMonitorPlugin::handleWindowPosChanging(const WINDOWPOS& /*windowPos*/)
     {
         const util::DisplayDevices displayDevices;
         const util::DisplayDevice* currentDisplayDevice = getDisplayDevice(displayDevices, _farrWindowHandle);
-        const RECT& newDisplayRect = currentDisplayDevice->getPositionAndSize();
+        const CRect currentDisplayRect = currentDisplayDevice->getPositionAndSize();
 
-        RECT windowRect = { 0 };
+        CRect windowRect;
         GetWindowRect(_farrWindowHandle, &windowRect);
 
-        const int newWidth = getWidth(windowRect);
-        const int newHeight = getHeight(windowRect);
+        const int heightDelta = std::abs(windowRect.Height() - _oldWindowRect.Height());
+        const bool doCenter = _options.enableThreshold ? (heightDelta >= _options.threshold) : true;
 
-        const int newLeft = newDisplayRect.left + (getWidth(newDisplayRect) - newWidth) / 2;
-        const int newTop = newDisplayRect.top + (getHeight(newDisplayRect) - newHeight) / 2;
+        if(doCenter)
+        {
+            const int newWidth = windowRect.Width();
+            const int newHeight = windowRect.Height();
 
-        const int newRight = newLeft + newWidth;
-        const int newBottom = newTop + newHeight;
+            const int newLeft = currentDisplayRect.left + (currentDisplayRect.Width() - newWidth) / 2;
+            const int newTop = currentDisplayRect.top + (currentDisplayRect.Height() - newHeight) / 2;
 
-        MoveWindow(_farrWindowHandle, newLeft, newTop, newRight - newLeft, newBottom - newTop, TRUE);
+            const int newRight = newLeft + newWidth;
+            const int newBottom = newTop + newHeight;
+
+            MoveWindow(_farrWindowHandle, newLeft, newTop, newRight - newLeft, newBottom - newTop, TRUE);
+
+            _oldWindowRect = CRect(newLeft, newTop, newRight, newBottom);
+        }
     }
 }
 
