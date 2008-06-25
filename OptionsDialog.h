@@ -22,21 +22,28 @@ public:
     END_MSG_MAP()
 
 private:
+    void initializeCheckBox(CButton& button, int id, const char* optionName, bool defaultValue)
+    {
+        button = GetDlgItem(id);
+        button.SetCheck(_optionsFile.getValue(optionName, defaultValue) ? BST_CHECKED : BST_UNCHECKED);
+    }
+
+    void storeCheckBoxValue(const CButton& button, const char* optionName)
+    {
+        _optionsFile.setValue(optionName, (button.GetCheck() == BST_CHECKED));
+    }
+
     LRESULT onInitDialog(UINT, WPARAM, LPARAM, BOOL&)
     {
-        _enableMultiMonitorCheck = GetDlgItem(IDC_CHECK_USE_MULTIMON);
-        _moveRelativeCheck = GetDlgItem(IDC_CHECK_MOVE_RELATIVE);
-        _resizeRelativeCheck = GetDlgItem(IDC_CHECK_RESIZE_RELATIVE);
-        _centerCheck = GetDlgItem(IDC_CHECK_CENTER);
-        _thresholdCheck = GetDlgItem(IDC_CHECK_THRESHOLD);
+        initializeCheckBox(_enableMultiMonitorCheck, IDC_CHECK_USE_MULTIMON, "EnableMultiMonitor", true);
+        initializeCheckBox(_moveRelativeCheck, IDC_CHECK_MOVE_RELATIVE, "MoveRelative", true);
+        initializeCheckBox(_resizeRelativeCheck, IDC_CHECK_RESIZE_RELATIVE, "ResizeRelative", true);
+        initializeCheckBox(_moveToMonitorWithMouse, IDC_CHECK_MOVE_TO_MOUSE, "ShowOnMonitorWithMouse", false);
+        initializeCheckBox(_centerCheck, IDC_CHECK_CENTER, "Center", false);
+        initializeCheckBox(_thresholdCheck, IDC_CHECK_THRESHOLD, "EnableThreshold", false);
+        
         _thresholdEditBox = GetDlgItem(IDC_EDIT_THRESHOLD);
         
-        _enableMultiMonitorCheck.SetCheck(_optionsFile.getValue("EnableMultiMonitor", true) ? BST_CHECKED : BST_UNCHECKED);
-        _moveRelativeCheck.SetCheck(_optionsFile.getValue("MoveRelative", true) ? BST_CHECKED : BST_UNCHECKED);
-        _resizeRelativeCheck.SetCheck(_optionsFile.getValue("ResizeRelative", true) ? BST_CHECKED : BST_UNCHECKED);
-        _centerCheck.SetCheck(_optionsFile.getValue("Center", false) ? BST_CHECKED : BST_UNCHECKED);
-        _thresholdCheck.SetCheck(_optionsFile.getValue("EnableThreshold", false) ? BST_CHECKED : BST_UNCHECKED);
-
         std::stringstream stream;
         stream << _optionsFile.getValue("Threshold", 0L);
         _thresholdEditBox.SetWindowText(stream.str().c_str());
@@ -46,11 +53,12 @@ private:
 
     LRESULT onOk(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
     {
-        _optionsFile.setValue("EnableMultiMonitor", (_enableMultiMonitorCheck.GetCheck() == BST_CHECKED));
-        _optionsFile.setValue("MoveRelative", (_moveRelativeCheck.GetCheck() == BST_CHECKED));
-        _optionsFile.setValue("ResizeRelative", (_resizeRelativeCheck.GetCheck() == BST_CHECKED));
-        _optionsFile.setValue("Center", (_centerCheck.GetCheck() == BST_CHECKED));
-        _optionsFile.setValue("EnableThreshold", (_thresholdCheck.GetCheck() == BST_CHECKED));
+        storeCheckBoxValue(_enableMultiMonitorCheck, "EnableMultiMonitor");
+        storeCheckBoxValue(_moveRelativeCheck, "MoveRelative");
+        storeCheckBoxValue(_resizeRelativeCheck, "ResizeRelative");
+        storeCheckBoxValue(_moveToMonitorWithMouse, "ShowOnMonitorWithMouse");
+        storeCheckBoxValue(_centerCheck, "Center");
+        storeCheckBoxValue(_thresholdCheck, "EnableThreshold");
 
         char thresholdAsString[100];
         _thresholdEditBox.GetWindowText(thresholdAsString, 100);
@@ -78,6 +86,7 @@ private:
     CButton _enableMultiMonitorCheck;
     CButton _moveRelativeCheck;
     CButton _resizeRelativeCheck;
+    CButton _moveToMonitorWithMouse;
     CButton _centerCheck;
     CButton _thresholdCheck;
     CEdit   _thresholdEditBox;

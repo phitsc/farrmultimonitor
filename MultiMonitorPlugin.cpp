@@ -6,6 +6,7 @@
 #include "OptionsFile.h"
 
 #include <algorithm>
+#include <sstream>
 
 //-----------------------------------------------------------------------
 
@@ -98,11 +99,23 @@ void MultiMonitorPlugin::handleShowWindow()
     {
         const util::DisplayDevices displayDevices;
 
-        HWND foregroundWindow = GetForegroundWindow();
+        const HWND foregroundWindow = GetForegroundWindow();
+        const HWND desktopWindow = GetDesktopWindow();
+        const HWND shellWindow = GetShellWindow();
+
+        //char title[200];
+        //GetWindowText(foregroundWindow, title, 200);
+
+        //std::stringstream stream;
+        //stream << "Foreground window: 0x" << std::hex << foregroundWindow << " '" << title << "'\n";
+
+        //OutputDebugString(stream.str().c_str());
+
+        const bool noWindowActive = ((foregroundWindow == 0) || (foregroundWindow == desktopWindow) || (foregroundWindow == shellWindow));
 
         const util::DisplayDevice* currentDisplayDevice = getDisplayDevice(displayDevices, _farrWindowHandle);
         
-        const util::DisplayDevice* newDisplayDevice = ((foregroundWindow == 0) || (_options.showOnMonitorWithMouse)) ?
+        const util::DisplayDevice* newDisplayDevice = (noWindowActive || (_options.showOnMonitorWithMouse)) ?
             getDisplayDeviceContainingMouse(displayDevices) :
             getDisplayDevice(displayDevices, foregroundWindow);
 

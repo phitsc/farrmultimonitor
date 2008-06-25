@@ -95,7 +95,6 @@ BEGIN
     "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
     "LANGUAGE 9, 1\r\n"
     "#pragma code_page(1252)\r\n"
-    "#include ""res\\MSVC_TestPlugin.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
     "#include ""afxres.rc""     // Standard components\r\n"
     "#endif\r\n"
     "\0"
@@ -109,23 +108,25 @@ END
 // Dialog
 //
 
-IDD_DIALOG_OPTIONS DIALOGEX 0, 0, 207, 114
+IDD_DIALOG_OPTIONS DIALOGEX 0, 0, 207, 129
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "FARR Multi Monitor"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,96,93,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,150,93,50,14
-    CONTROL         "Move FARR to active monitor when showing",IDC_CHECK_USE_MULTIMON,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,157,10
+    DEFPUSHBUTTON   "OK",IDOK,96,108,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,150,108,50,14
+    CONTROL         "Display FARR on active monitor",IDC_CHECK_USE_MULTIMON,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,116,10
     CONTROL         "Resize relative to screen resolution",IDC_CHECK_RESIZE_RELATIVE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,33,128,10
     CONTROL         "Move relative to screen resolution",IDC_CHECK_MOVE_RELATIVE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,20,125,10
-    CONTROL         "Keep FARR centered",IDC_CHECK_CENTER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,54,83,10
-    CONTROL         "Threshold",IDC_CHECK_THRESHOLD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,67,43,10
-    EDITTEXT        IDC_EDIT_THRESHOLD,69,66,54,14,ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "pixels",IDC_STATIC,128,68,19,8
+    CONTROL         "Keep FARR centered",IDC_CHECK_CENTER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,67,83,10
+    CONTROL         "Threshold",IDC_CHECK_THRESHOLD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,80,43,10
+    EDITTEXT        IDC_EDIT_THRESHOLD,69,79,54,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "pixels",IDC_STATIC,128,81,19,8
+    CONTROL         "Display on monitor where mouse is",IDC_CHECK_MOVE_TO_MOUSE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,46,126,10
 END
 
 
@@ -142,7 +143,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 200
         TOPMARGIN, 7
-        BOTTOMMARGIN, 107
+        BOTTOMMARGIN, 122
     END
 END
 #endif    // APSTUDIO_INVOKED
