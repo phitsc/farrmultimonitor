@@ -50,13 +50,13 @@
 // IMPORTANT: you need to customize there
 //
 #define ThisPlugin_DisplayName			"FARR Multi Monitor Plugin"
-#define ThisPlugin_VersionString		"0.0.0.1"
-#define ThisPlugin_ReleaseDateString	"June 12, 2008"
+#define ThisPlugin_VersionString		"0.1.0"
+#define ThisPlugin_ReleaseDateString	"June 29, 2008"
 #define ThisPlugin_Author			    "Philipp Tschannen (phitsc)"
 #define ThisPlugin_HomepageURL			"http://farrmultimonitor.origo.ethz.ch"
 #define ThisPlugin_UpdateURL			""
-#define ThisPlugin_ShortDescription		"Adds support for multiple monitors."
-#define ThisPlugin_LongDescription		"Adds support for multiple monitors."
+#define ThisPlugin_ShortDescription		"Display FARR on active monitor and/or center FARR main window."
+#define ThisPlugin_LongDescription		"Adds support for multiple monitors by displaying the FARR main window on the currently active monitor and/or allows centering the FARR main window on the screen."
 //
 // If you support advanced options button, specify caption here, otherwise ""
 #define ThisPlugin_AdvConfigString		"Advanced Options"

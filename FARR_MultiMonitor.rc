@@ -27,13 +27,13 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,0,0,1
- PRODUCTVERSION 0,0,0,1
+ FILEVERSION 0,1,0,0
+ PRODUCTVERSION 0,1,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
- FILEFLAGS 0x1L
+ FILEFLAGS 0x21L
 #else
- FILEFLAGS 0x0L
+ FILEFLAGS 0x20L
 #endif
  FILEOS 0x4L
  FILETYPE 0x2L
@@ -43,10 +43,14 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "FileVersion", "0.0.0.1"
+            VALUE "FileDescription", "FARR MultiMonitor plugin"
+            VALUE "FileVersion", "0.1.0"
             VALUE "InternalName", "FARR_MultiMonitor.dll"
+            VALUE "LegalCopyright", "(c) 2008 Philipp Tschannen"
             VALUE "OriginalFilename", "FARR_MultiMonitor.dll"
-            VALUE "ProductVersion", "0.0.0.1"
+            VALUE "ProductName", "FARR plugin"
+            VALUE "ProductVersion", "0.1.0"
+            VALUE "SpecialBuild", "20080629 - 0.1.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -121,10 +125,9 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,33,128,10
     CONTROL         "Move relative to screen resolution",IDC_CHECK_MOVE_RELATIVE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,20,125,10
-    CONTROL         "Keep FARR centered",IDC_CHECK_CENTER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,67,83,10
-    CONTROL         "Threshold",IDC_CHECK_THRESHOLD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,80,43,10
-    EDITTEXT        IDC_EDIT_THRESHOLD,69,79,54,14,ES_AUTOHSCROLL | ES_NUMBER
-    LTEXT           "pixels",IDC_STATIC,128,81,19,8
+    CONTROL         "Center FARR when it appears",IDC_CHECK_CENTER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,67,111,10
+    CONTROL         "and whenever it changes size",IDC_CHECK_ALWAYS_CENTER,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,80,112,10
     CONTROL         "Display on monitor where mouse is",IDC_CHECK_MOVE_TO_MOUSE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,46,126,10
 END

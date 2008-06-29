@@ -24,8 +24,7 @@ struct Options
     bool moveRelative;
     bool resizeRelative;
     bool center;
-    bool enableThreshold;
-    long threshold;
+    bool alwaysCenter;
 };
 
 //-----------------------------------------------------------------------
@@ -46,13 +45,16 @@ private:
     static const util::DisplayDevice* getDisplayDevice(const util::DisplayDevices& displayDevices, HWND hWnd);
     static const util::DisplayDevice* getDisplayDeviceContainingMouse(const util::DisplayDevices& displayDevices);
 
+    // returns new RECT
+    CRect centerFarrWindow();
+
     HWND _farrWindowHandle;
 
     OptionsFile _optionsFile;
     Options     _options;
 
     bool        _isVisible;
-    CRect       _oldWindowRect;
+    CRect       _lastWindowRect;
 };
 
 //-----------------------------------------------------------------------

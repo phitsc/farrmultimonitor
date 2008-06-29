@@ -2,8 +2,6 @@
 
 #include "OptionsFile.h"
 
-#include <sstream>
-
 //-----------------------------------------------------------------------
 
 class OptionsDialog : public CDialogImpl<OptionsDialog>
@@ -40,14 +38,8 @@ private:
         initializeCheckBox(_resizeRelativeCheck, IDC_CHECK_RESIZE_RELATIVE, "ResizeRelative", true);
         initializeCheckBox(_moveToMonitorWithMouse, IDC_CHECK_MOVE_TO_MOUSE, "ShowOnMonitorWithMouse", false);
         initializeCheckBox(_centerCheck, IDC_CHECK_CENTER, "Center", false);
-        initializeCheckBox(_thresholdCheck, IDC_CHECK_THRESHOLD, "EnableThreshold", false);
+        initializeCheckBox(_alwaysCenterCheck, IDC_CHECK_ALWAYS_CENTER, "CenterAlways", false);
         
-        _thresholdEditBox = GetDlgItem(IDC_EDIT_THRESHOLD);
-        
-        std::stringstream stream;
-        stream << _optionsFile.getValue("Threshold", 0L);
-        _thresholdEditBox.SetWindowText(stream.str().c_str());
-
         return 0;
     }
 
@@ -58,16 +50,7 @@ private:
         storeCheckBoxValue(_resizeRelativeCheck, "ResizeRelative");
         storeCheckBoxValue(_moveToMonitorWithMouse, "ShowOnMonitorWithMouse");
         storeCheckBoxValue(_centerCheck, "Center");
-        storeCheckBoxValue(_thresholdCheck, "EnableThreshold");
-
-        char thresholdAsString[100];
-        _thresholdEditBox.GetWindowText(thresholdAsString, 100);
-
-        std::stringstream stream(thresholdAsString);
-        long threshold = 0;
-        stream >> threshold;
-
-        _optionsFile.setValue("Threshold", threshold);
+        storeCheckBoxValue(_alwaysCenterCheck, "CenterAlways");
 
         EndDialog(IDOK);
 
@@ -88,8 +71,7 @@ private:
     CButton _resizeRelativeCheck;
     CButton _moveToMonitorWithMouse;
     CButton _centerCheck;
-    CButton _thresholdCheck;
-    CEdit   _thresholdEditBox;
+    CButton _alwaysCenterCheck;
 };
 
 //-----------------------------------------------------------------------

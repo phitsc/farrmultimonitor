@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="FARR_MultiMonitor"
+	Name="FarrMultiMonitor"
 	ProjectGUID="{21651447-C809-4A19-BFB6-7FF924E19569}"
 	RootNamespace="FARR_MultiMonitor"
 	Keyword="MFCDLLProj"
