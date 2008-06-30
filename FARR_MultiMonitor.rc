@@ -45,9 +45,9 @@ BEGIN
         BEGIN
             VALUE "FileDescription", "FARR MultiMonitor plugin"
             VALUE "FileVersion", "0.1.0"
-            VALUE "InternalName", "FARR_MultiMonitor.dll"
+            VALUE "InternalName", "FarrMultiMonitor.dll"
             VALUE "LegalCopyright", "(c) 2008 Philipp Tschannen"
-            VALUE "OriginalFilename", "FARR_MultiMonitor.dll"
+            VALUE "OriginalFilename", "FarrMultiMonitor.dll"
             VALUE "ProductName", "FARR plugin"
             VALUE "ProductVersion", "0.1.0"
             VALUE "SpecialBuild", "20080629 - 0.1.0"
