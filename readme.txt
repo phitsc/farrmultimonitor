@@ -2,6 +2,8 @@
 
 FARR MultiMonitor plugin - 0.2.0 - 3. July 2008
 
+(c) 2008 Philipp Tschannen
+
 ===============================================================================
 
 Description
@@ -26,10 +28,10 @@ Options
 - Center FARR when it appears: will center FARR horizontally, as well as vertically, when it appears
 - and whenver it changes size: will center FARR whenever its size changes
 
-- Enable hotkeys: enable moving to next/last monitor and centering with hotkeys
-    Win - Left : move FARR window to monitor on the left
-	Win - Right : move FARR window to monitor on the right
-	Win - Home : center FARR window
+- Enable hotkeys: enable moving FARR window to next/last monitor and centering with hotkeys
+    Win + Left  : move FARR window to monitor on the left
+	Win + Right : move FARR window to monitor on the right
+	Win + Home  : center FARR window
 
 
 Credits
