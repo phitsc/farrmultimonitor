@@ -27,8 +27,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,1,0,0
- PRODUCTVERSION 0,1,0,0
+ FILEVERSION 0,2,0,0
+ PRODUCTVERSION 0,2,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x21L
@@ -44,13 +44,13 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "FileDescription", "FARR MultiMonitor plugin"
-            VALUE "FileVersion", "0.1.0"
+            VALUE "FileVersion", "0.2.0"
             VALUE "InternalName", "FarrMultiMonitor.dll"
             VALUE "LegalCopyright", "(c) 2008 Philipp Tschannen"
             VALUE "OriginalFilename", "FarrMultiMonitor.dll"
             VALUE "ProductName", "FARR plugin"
-            VALUE "ProductVersion", "0.1.0"
-            VALUE "SpecialBuild", "20080629 - 0.1.0"
+            VALUE "ProductVersion", "0.2.0"
+            VALUE "SpecialBuild", "20080703 - 0.2.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -112,13 +112,13 @@ END
 // Dialog
 //
 
-IDD_DIALOG_OPTIONS DIALOGEX 0, 0, 207, 129
+IDD_DIALOG_OPTIONS DIALOGEX 0, 0, 207, 145
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "FARR Multi Monitor"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,96,108,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,150,108,50,14
+    DEFPUSHBUTTON   "OK",IDOK,96,124,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,150,124,50,14
     CONTROL         "Display FARR on active monitor",IDC_CHECK_USE_MULTIMON,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,116,10
     CONTROL         "Resize relative to screen resolution",IDC_CHECK_RESIZE_RELATIVE,
@@ -130,6 +130,7 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,80,112,10
     CONTROL         "Display on monitor where mouse is",IDC_CHECK_MOVE_TO_MOUSE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,46,126,10
+    CONTROL         "Enable hotkeys",IDC_CHECK_ENABLE_HOTKEYS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,101,73,10
 END
 
 
@@ -146,7 +147,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 200
         TOPMARGIN, 7
-        BOTTOMMARGIN, 122
+        BOTTOMMARGIN, 138
     END
 END
 #endif    // APSTUDIO_INVOKED

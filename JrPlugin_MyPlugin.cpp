@@ -123,11 +123,12 @@ BOOL MyPlugin_DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* /*lpRes
 
 MultiMonitorPlugin* multiMonitorPlugin = 0;
 
-HHOOK messageHook = 0;
+HHOOK callWindowProcMessageHook = 0;
+HHOOK keyboardMessageHook = 0;
 DWORD farrThreadId = 0;
 HWND farrWindowHandle = 0;
 
-LRESULT CALLBACK HookFunction(int code, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK WindowProcMessageHookFunction(int code, WPARAM wParam, LPARAM lParam)
 {
     if(code < 0)
     {
@@ -139,6 +140,24 @@ LRESULT CALLBACK HookFunction(int code, WPARAM wParam, LPARAM lParam)
     if((cwp->hwnd == farrWindowHandle) && (multiMonitorPlugin != 0))
     {
         multiMonitorPlugin->handleMessage(cwp->message, cwp->wParam, cwp->lParam);
+    }
+
+    return CallNextHookEx(NULL, code, wParam, lParam);
+}
+
+LRESULT CALLBACK KeyboardHookFunction(int code, WPARAM wParam, LPARAM lParam)
+{
+    if(code < 0)
+    {
+        return CallNextHookEx(NULL, code, wParam, lParam);
+    }
+
+    if(multiMonitorPlugin != 0)
+    {
+        if(multiMonitorPlugin->handleKeyboardMessage(wParam, lParam))
+        {
+            return 1;
+        }
     }
 
     return CallNextHookEx(NULL, code, wParam, lParam);
@@ -170,7 +189,8 @@ void createMultiMonitorPlugin()
 {
     if(farrWindowHandle != 0)
     {
-        messageHook = SetWindowsHookEx(WH_CALLWNDPROC, (HOOKPROC)HookFunction, 0, farrThreadId);
+        callWindowProcMessageHook = SetWindowsHookEx(WH_CALLWNDPROC, (HOOKPROC)WindowProcMessageHookFunction, 0, farrThreadId);
+        keyboardMessageHook = SetWindowsHookEx(WH_KEYBOARD, (HOOKPROC)KeyboardHookFunction, 0, farrThreadId);
 
         char modulePath[MAX_PATH] = { 0 };
         GetModuleFileName(dllInstanceHandle, modulePath, MAX_PATH);
@@ -201,9 +221,14 @@ BOOL MyPlugin_DoInit()
 
 BOOL MyPlugin_DoShutdown()
 {
-    if(messageHook != 0)
+    if(callWindowProcMessageHook != 0)
     {
-        UnhookWindowsHookEx(messageHook);
+        UnhookWindowsHookEx(callWindowProcMessageHook);
+    }
+
+    if(keyboardMessageHook != 0)
+    {
+        UnhookWindowsHookEx(keyboardMessageHook);
     }
 
     delete multiMonitorPlugin;

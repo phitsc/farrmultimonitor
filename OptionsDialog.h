@@ -39,6 +39,7 @@ private:
         initializeCheckBox(_moveToMonitorWithMouse, IDC_CHECK_MOVE_TO_MOUSE, "ShowOnMonitorWithMouse", false);
         initializeCheckBox(_centerCheck, IDC_CHECK_CENTER, "Center", false);
         initializeCheckBox(_alwaysCenterCheck, IDC_CHECK_ALWAYS_CENTER, "CenterAlways", false);
+        initializeCheckBox(_enableHotkeysCheck, IDC_CHECK_ENABLE_HOTKEYS, "EnableHotkeys", true);
         
         return 0;
     }
@@ -51,6 +52,7 @@ private:
         storeCheckBoxValue(_moveToMonitorWithMouse, "ShowOnMonitorWithMouse");
         storeCheckBoxValue(_centerCheck, "Center");
         storeCheckBoxValue(_alwaysCenterCheck, "CenterAlways");
+        storeCheckBoxValue(_enableHotkeysCheck, "EnableHotkeys");
 
         EndDialog(IDOK);
 
@@ -72,6 +74,7 @@ private:
     CButton _moveToMonitorWithMouse;
     CButton _centerCheck;
     CButton _alwaysCenterCheck;
+    CButton _enableHotkeysCheck;
 };
 
 //-----------------------------------------------------------------------

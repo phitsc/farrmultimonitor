@@ -25,6 +25,7 @@ struct Options
     bool resizeRelative;
     bool center;
     bool alwaysCenter;
+    bool enableHotkeys;
 };
 
 //-----------------------------------------------------------------------
@@ -35,12 +36,15 @@ public:
     MultiMonitorPlugin(HWND farrWindowHandle, const std::string& modulePath);
 
     void handleMessage(UINT message, WPARAM wParam, LPARAM lParam);
+    bool handleKeyboardMessage(WPARAM wParam, LPARAM lParam);
 
     void showOptions();
 
 private:
     void handleShowWindow();
     void handleWindowPosChanging(const WINDOWPOS& windowPos);
+    void moveToNextLastDisplayDevice(bool toNext);
+    void moveWindowFromSourceToTargetDisplayDevice(const util::DisplayDevice* source, const util::DisplayDevice* target);
 
     static const util::DisplayDevice* getDisplayDevice(const util::DisplayDevices& displayDevices, HWND hWnd);
     static const util::DisplayDevice* getDisplayDeviceContainingMouse(const util::DisplayDevices& displayDevices);

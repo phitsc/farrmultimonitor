@@ -25,6 +25,7 @@ void Options::update(const OptionsFile& optionsFile)
     resizeRelative = optionsFile.getValue("ResizeRelative", true);
     center = optionsFile.getValue("Center", false);
     alwaysCenter = optionsFile.getValue("CenterAlways", false);
+    enableHotkeys = optionsFile.getValue("EnableHotkeys", true);
 }
 
 //-----------------------------------------------------------------------
@@ -92,6 +93,108 @@ void MultiMonitorPlugin::handleMessage(UINT message, WPARAM wParam, LPARAM lPara
 
 //-----------------------------------------------------------------------
 
+bool MultiMonitorPlugin::handleKeyboardMessage(WPARAM wParam, LPARAM lParam)
+{
+    if(_isVisible && _options.enableHotkeys)
+    {
+        bool winKeyPressed = ((GetKeyState(VK_LWIN) & 0x8000) == 0x8000);
+
+        if(winKeyPressed)
+        {
+            bool keyPressed = ((lParam & 0x80000000) == 0x80000000);
+
+            if(wParam == VK_RIGHT)
+            {
+                if(keyPressed)
+                {
+                    moveToNextLastDisplayDevice(true);
+                }
+
+                return true;
+            }
+            else if(wParam == VK_LEFT)
+            {
+                if(keyPressed)
+                {
+                    moveToNextLastDisplayDevice(false);
+                }
+
+                return true;
+            }
+            else if(wParam == VK_HOME)
+            {
+                if(keyPressed)
+                {
+                    centerFarrWindow();
+                }
+
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+//-----------------------------------------------------------------------
+
+void MultiMonitorPlugin::moveToNextLastDisplayDevice(bool toNext)
+{
+    const util::DisplayDevices displayDevices;
+
+    const util::DisplayDevice* currentDisplayDevice = getDisplayDevice(displayDevices, _farrWindowHandle);
+
+    util::DisplayDevices::const_iterator displayDeviceIterator = displayDevices.begin();
+    const util::DisplayDevices::const_iterator displayDevicesEnd = displayDevices.end();
+
+    const util::DisplayDevice* newDisplayDevice = 0;
+
+    for( ; displayDeviceIterator != displayDevicesEnd; ++displayDeviceIterator)
+    {
+        const util::DisplayDevice& displayDevice = *displayDeviceIterator;
+        if(&displayDevice == currentDisplayDevice)
+        {
+            if(toNext)
+            {
+                ++displayDeviceIterator;
+                if(displayDeviceIterator != displayDevicesEnd)
+                {
+                    newDisplayDevice = &(*displayDeviceIterator);
+                    break;
+                }
+                else
+                {
+                    displayDeviceIterator = displayDevices.begin();
+                    newDisplayDevice = &(*displayDeviceIterator);
+                    break;
+                }
+            }
+            else
+            {
+                if(displayDeviceIterator == displayDevices.begin())
+                {
+                    if(displayDevices.count() > 1)
+                    {
+                        displayDeviceIterator = displayDevices.end() - 1;
+                        newDisplayDevice = &(*displayDeviceIterator);
+                        break;
+                    }
+                }
+                else
+                {
+                    --displayDeviceIterator;
+                    newDisplayDevice = &(*displayDeviceIterator);
+                    break;
+                }
+            }
+        }
+    }
+
+    moveWindowFromSourceToTargetDisplayDevice(currentDisplayDevice, newDisplayDevice);
+}
+
+//-----------------------------------------------------------------------
+
 void MultiMonitorPlugin::handleShowWindow()
 {
     if(_options.enableMultiMon)
@@ -118,44 +221,51 @@ void MultiMonitorPlugin::handleShowWindow()
             getDisplayDeviceContainingMouse(displayDevices) :
             getDisplayDevice(displayDevices, foregroundWindow);
 
-        if((currentDisplayDevice != 0) && (newDisplayDevice != 0))
+        moveWindowFromSourceToTargetDisplayDevice(currentDisplayDevice, newDisplayDevice);
+    }
+}
+
+//-----------------------------------------------------------------------
+
+void MultiMonitorPlugin::moveWindowFromSourceToTargetDisplayDevice(const util::DisplayDevice* currentDisplayDevice, const util::DisplayDevice* newDisplayDevice)
+{
+    if((currentDisplayDevice != 0) && (newDisplayDevice != 0))
+    {
+        CRect windowRect;
+        GetWindowRect(_farrWindowHandle, &windowRect);
+
+        const CRect oldDisplayRect = currentDisplayDevice->getPositionAndSize();
+        const CRect newDisplayRect = newDisplayDevice->getPositionAndSize();
+
+        const int xOffset = windowRect.left - oldDisplayRect.left;
+        const int yOffset = windowRect.top - oldDisplayRect.top;
+
+        const double xRatio = (double)newDisplayRect.Width() / (double)oldDisplayRect.Width();
+        const double yRatio = (double)newDisplayRect.Height() / (double)oldDisplayRect.Height();
+
+        int newLeft = 0;
+        int newTop = 0;
+        int newRight = 0;
+        int newBottom = 0;
+
+        const int newWidth = (int)((windowRect.Width() * (_options.resizeRelative ? xRatio : 1)));
+        const int newHeight = (int)((windowRect.Height() * (_options.resizeRelative ? yRatio : 1)));
+
+        if(_options.center)
         {
-            CRect windowRect;
-            GetWindowRect(_farrWindowHandle, &windowRect);
-
-            const CRect oldDisplayRect = currentDisplayDevice->getPositionAndSize();
-            const CRect newDisplayRect = newDisplayDevice->getPositionAndSize();
-
-            const int xOffset = windowRect.left - oldDisplayRect.left;
-            const int yOffset = windowRect.top - oldDisplayRect.top;
-
-            const double xRatio = (double)newDisplayRect.Width() / (double)oldDisplayRect.Width();
-            const double yRatio = (double)newDisplayRect.Height() / (double)oldDisplayRect.Height();
-
-            int newLeft = 0;
-            int newTop = 0;
-            int newRight = 0;
-            int newBottom = 0;
-
-            const int newWidth = (int)((windowRect.Width() * (_options.resizeRelative ? xRatio : 1)));
-            const int newHeight = (int)((windowRect.Height() * (_options.resizeRelative ? yRatio : 1)));
-
-            if(_options.center)
-            {
-                newLeft = newDisplayRect.left + (newDisplayRect.Width() - newWidth) / 2;
-                newTop = newDisplayRect.top + (newDisplayRect.Height() - newHeight) / 2;
-            }
-            else
-            {
-                newLeft = newDisplayRect.left + (int)(xOffset * (_options.moveRelative ? xRatio : 1));
-                newTop = newDisplayRect.top + (int)(yOffset * (_options.moveRelative ? yRatio : 1));
-            }
-
-            newRight = newLeft + newWidth;
-            newBottom = newTop + newHeight;
-
-            MoveWindow(_farrWindowHandle, newLeft, newTop, newRight - newLeft, newBottom - newTop, _options.center ? FALSE : TRUE);
+            newLeft = newDisplayRect.left + (newDisplayRect.Width() - newWidth) / 2;
+            newTop = newDisplayRect.top + (newDisplayRect.Height() - newHeight) / 2;
         }
+        else
+        {
+            newLeft = newDisplayRect.left + (int)(xOffset * (_options.moveRelative ? xRatio : 1));
+            newTop = newDisplayRect.top + (int)(yOffset * (_options.moveRelative ? yRatio : 1));
+        }
+
+        newRight = newLeft + newWidth;
+        newBottom = newTop + newHeight;
+
+        MoveWindow(_farrWindowHandle, newLeft, newTop, newRight - newLeft, newBottom - newTop, TRUE);
     }
 
     if(_options.center)
