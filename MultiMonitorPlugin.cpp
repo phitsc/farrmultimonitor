@@ -61,7 +61,7 @@ const util::DisplayDevice* MultiMonitorPlugin::getDisplayDeviceContainingMouse(c
 
 //-----------------------------------------------------------------------
 
-void MultiMonitorPlugin::handleMessage(UINT message, WPARAM wParam, LPARAM lParam)
+void MultiMonitorPlugin::handleMessage(UINT message, WPARAM wParam, LPARAM lParam, HWND lastActiveWindow)
 {
     //std::stringstream stream;
     //stream << "Message: " << std::hex << cwp->message << "\n";
@@ -73,7 +73,7 @@ void MultiMonitorPlugin::handleMessage(UINT message, WPARAM wParam, LPARAM lPara
 
         if(_isVisible)
         {
-            handleShowWindow();
+            handleShowWindow(lastActiveWindow);
         }
     }
     else if(message == WM_WINDOWPOSCHANGING)
@@ -195,13 +195,13 @@ void MultiMonitorPlugin::moveToNextLastDisplayDevice(bool toNext)
 
 //-----------------------------------------------------------------------
 
-void MultiMonitorPlugin::handleShowWindow()
+void MultiMonitorPlugin::handleShowWindow(HWND lastActiveWindow)
 {
     if(_options.enableMultiMon)
     {
         const util::DisplayDevices displayDevices;
 
-        const HWND foregroundWindow = GetForegroundWindow();
+        const HWND foregroundWindow = lastActiveWindow;
         const HWND desktopWindow = GetDesktopWindow();
         const HWND shellWindow = GetShellWindow();
 

@@ -127,6 +127,7 @@ HHOOK callWindowProcMessageHook = 0;
 HHOOK keyboardMessageHook = 0;
 DWORD farrThreadId = 0;
 HWND farrWindowHandle = 0;
+HWND lastActiveWindow = 0;
 
 LRESULT CALLBACK WindowProcMessageHookFunction(int code, WPARAM wParam, LPARAM lParam)
 {
@@ -139,7 +140,15 @@ LRESULT CALLBACK WindowProcMessageHookFunction(int code, WPARAM wParam, LPARAM l
 
     if((cwp->hwnd == farrWindowHandle) && (multiMonitorPlugin != 0))
     {
-        multiMonitorPlugin->handleMessage(cwp->message, cwp->wParam, cwp->lParam);
+        multiMonitorPlugin->handleMessage(cwp->message, cwp->wParam, cwp->lParam, lastActiveWindow);
+    }
+    else if((cwp->message == WM_ACTIVATE) && ((LOWORD(cwp->wParam) == WA_ACTIVE) || (LOWORD(cwp->wParam) == WA_CLICKACTIVE)))
+    {
+        HWND activatedWindow = (HWND)cwp->lParam;
+        if(activatedWindow != farrWindowHandle)
+        {
+            lastActiveWindow = activatedWindow;
+        }
     }
 
     return CallNextHookEx(NULL, code, wParam, lParam);

@@ -35,13 +35,13 @@ class MultiMonitorPlugin
 public:
     MultiMonitorPlugin(HWND farrWindowHandle, const std::string& modulePath);
 
-    void handleMessage(UINT message, WPARAM wParam, LPARAM lParam);
+    void handleMessage(UINT message, WPARAM wParam, LPARAM lParam, HWND lastActiveWindow);
     bool handleKeyboardMessage(WPARAM wParam, LPARAM lParam);
 
     void showOptions();
 
 private:
-    void handleShowWindow();
+    void handleShowWindow(HWND lastActiveWindow);
     void handleWindowPosChanging(const WINDOWPOS& windowPos);
     void moveToNextLastDisplayDevice(bool toNext);
     void moveWindowFromSourceToTargetDisplayDevice(const util::DisplayDevice* source, const util::DisplayDevice* target);
