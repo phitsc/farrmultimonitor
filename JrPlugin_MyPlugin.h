@@ -50,8 +50,8 @@
 // IMPORTANT: you need to customize there
 //
 #define ThisPlugin_DisplayName			"FARR Multi Monitor Plugin"
-#define ThisPlugin_VersionString		"0.2.0"
-#define ThisPlugin_ReleaseDateString	"July 3, 2008"
+#define ThisPlugin_VersionString		"0.3.0"
+#define ThisPlugin_ReleaseDateString	"13. October 2008"
 #define ThisPlugin_Author			    "Philipp Tschannen (phitsc)"
 #define ThisPlugin_HomepageURL			"http://farrmultimonitor.origo.ethz.ch"
 #define ThisPlugin_UpdateURL			""

@@ -1,6 +1,6 @@
 ===============================================================================
 
-FARR MultiMonitor plugin - 0.2.0 - 3. July 2008
+FARR MultiMonitor plugin - 0.3.0 - 13. October 2008
 
 (c) 2008 Philipp Tschannen
 
@@ -46,6 +46,9 @@ This plugin is provided 'as is'. No warranty of any kind is expressed or implied
 
 Version history
 ================
+0.3.0
+- fixes 'displaying FARR on monitor with active window doesn't work anymore'
+
 0.2.0
 - added support for moving to next/last monitor and centering with hotkeys
 
