@@ -32,6 +32,7 @@ Options
     Win + Left  : move FARR window to monitor on the left
 	Win + Right : move FARR window to monitor on the right
 	Win + Home  : center FARR window
+    Win + 1..0  : resize FARR window to 10% .. 100% of current screen's width
 
 
 Credits
@@ -48,6 +49,7 @@ Version history
 ================
 0.4.0
 - added option to resize FARR to a certain percentage of the respective screen's width
+- added hotkeys Win + 1 .. Win + 0 to resize FARR to a certain percentage of the screen's width
 
 0.3.0
 - fixes 'displaying FARR on monitor with active window doesn't work anymore'

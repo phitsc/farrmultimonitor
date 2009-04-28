@@ -97,6 +97,17 @@ void MultiMonitorPlugin::handleMessage(UINT message, WPARAM wParam, LPARAM lPara
 
 //-----------------------------------------------------------------------
 
+#define VK_0    0x30
+#define VK_1    0x31
+#define VK_2    0x32
+#define VK_3    0x33
+#define VK_4    0x34
+#define VK_5    0x35
+#define VK_6    0x36
+#define VK_7    0x37
+#define VK_8    0x38
+#define VK_9    0x39
+
 bool MultiMonitorPlugin::handleKeyboardMessage(WPARAM wParam, LPARAM lParam)
 {
     if(_isVisible && _options.enableHotkeys)
@@ -107,32 +118,62 @@ bool MultiMonitorPlugin::handleKeyboardMessage(WPARAM wParam, LPARAM lParam)
         {
             bool keyPressed = ((lParam & 0x80000000) == 0x80000000);
 
-            if(wParam == VK_RIGHT)
+            switch(wParam)
             {
-                if(keyPressed)
+            case VK_RIGHT:
                 {
-                    moveToNextLastDisplayDevice(true);
+                    if(keyPressed)
+                    {
+                        moveToNextLastDisplayDevice(NextMonitor);
+                    }
+
+                    return true;
                 }
 
-                return true;
-            }
-            else if(wParam == VK_LEFT)
-            {
-                if(keyPressed)
+            case VK_LEFT:
                 {
-                    moveToNextLastDisplayDevice(false);
+                    if(keyPressed)
+                    {
+                        moveToNextLastDisplayDevice(LastMonitor);
+                    }
+
+                    return true;
                 }
 
-                return true;
-            }
-            else if(wParam == VK_HOME)
-            {
-                if(keyPressed)
+            case VK_HOME:
                 {
-                    centerFarrWindow();
+                    if(keyPressed)
+                    {
+                        centerFarrWindow();
+                    }
+
+                    return true;
                 }
 
-                return true;
+            case VK_0:
+            case VK_1:
+            case VK_2:
+            case VK_3:
+            case VK_4:
+            case VK_5:
+            case VK_6:
+            case VK_7:
+            case VK_8:
+            case VK_9:
+                {
+                    if(keyPressed)
+                    {
+                        const long index = wParam - VK_0;
+                        const long percent = (index == 0) ? 100L : (index * 10L);
+
+                        _options.resizePercentValue = percent;
+                        _optionsFile.setValue("ResizePercentValue", percent);
+
+                        moveToNextLastDisplayDevice(SameMonitor, percent);
+                    }
+
+                    return true;
+                }
             }
         }
     }
@@ -142,7 +183,7 @@ bool MultiMonitorPlugin::handleKeyboardMessage(WPARAM wParam, LPARAM lParam)
 
 //-----------------------------------------------------------------------
 
-void MultiMonitorPlugin::moveToNextLastDisplayDevice(bool toNext)
+void MultiMonitorPlugin::moveToNextLastDisplayDevice(Where toWhere, long percent)
 {
     const util::DisplayDevices displayDevices;
 
@@ -158,7 +199,7 @@ void MultiMonitorPlugin::moveToNextLastDisplayDevice(bool toNext)
         const util::DisplayDevice& displayDevice = *displayDeviceIterator;
         if(&displayDevice == currentDisplayDevice)
         {
-            if(toNext)
+            if(toWhere == NextMonitor)
             {
                 ++displayDeviceIterator;
                 if(displayDeviceIterator != displayDevicesEnd)
@@ -173,7 +214,7 @@ void MultiMonitorPlugin::moveToNextLastDisplayDevice(bool toNext)
                     break;
                 }
             }
-            else
+            else if(toWhere == LastMonitor)
             {
                 if(displayDeviceIterator == displayDevices.begin())
                 {
@@ -191,10 +232,14 @@ void MultiMonitorPlugin::moveToNextLastDisplayDevice(bool toNext)
                     break;
                 }
             }
+            else if(toWhere == SameMonitor)
+            {
+                newDisplayDevice = currentDisplayDevice;
+            }
         }
     }
 
-    moveWindowFromSourceToTargetDisplayDevice(currentDisplayDevice, newDisplayDevice);
+    moveWindowFromSourceToTargetDisplayDevice(currentDisplayDevice, newDisplayDevice, percent);
 }
 
 //-----------------------------------------------------------------------
@@ -231,7 +276,7 @@ void MultiMonitorPlugin::handleShowWindow(HWND lastActiveWindow)
 
 //-----------------------------------------------------------------------
 
-void MultiMonitorPlugin::moveWindowFromSourceToTargetDisplayDevice(const util::DisplayDevice* currentDisplayDevice, const util::DisplayDevice* newDisplayDevice)
+void MultiMonitorPlugin::moveWindowFromSourceToTargetDisplayDevice(const util::DisplayDevice* currentDisplayDevice, const util::DisplayDevice* newDisplayDevice, long percent)
 {
     if((currentDisplayDevice != 0) && (newDisplayDevice != 0))
     {
@@ -252,7 +297,8 @@ void MultiMonitorPlugin::moveWindowFromSourceToTargetDisplayDevice(const util::D
         int newRight = 0;
         int newBottom = 0;
 
-        const int newWidth = (_options.resizePercent ? (int)((newDisplayRect.Width() * _options.resizePercentValue) / 100) : (int)((windowRect.Width() * (_options.resizeRelative ? xRatio : 1))));
+        const long resizePercentValue = (percent == 0) ? _options.resizePercentValue : percent;
+        const int newWidth = ((_options.resizePercent || (percent != 0))? (int)((newDisplayRect.Width() * resizePercentValue) / 100) : (int)((windowRect.Width() * (_options.resizeRelative ? xRatio : 1))));
         const int newHeight = (int)((windowRect.Height() * (_options.resizeRelative ? yRatio : 1)));
 
         if(_options.center)

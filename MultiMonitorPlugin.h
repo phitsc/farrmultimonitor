@@ -45,8 +45,14 @@ public:
 private:
     void handleShowWindow(HWND lastActiveWindow);
     void handleWindowPosChanging(const WINDOWPOS& windowPos);
-    void moveToNextLastDisplayDevice(bool toNext);
-    void moveWindowFromSourceToTargetDisplayDevice(const util::DisplayDevice* source, const util::DisplayDevice* target);
+    enum Where
+    {
+        NextMonitor,
+        LastMonitor,
+        SameMonitor
+    };
+    void moveToNextLastDisplayDevice(Where toWhere, long percent = 0);
+    void moveWindowFromSourceToTargetDisplayDevice(const util::DisplayDevice* source, const util::DisplayDevice* target, long percent = 0);
 
     static const util::DisplayDevice* getDisplayDevice(const util::DisplayDevices& displayDevices, HWND hWnd);
     static const util::DisplayDevice* getDisplayDeviceContainingMouse(const util::DisplayDevices& displayDevices);
