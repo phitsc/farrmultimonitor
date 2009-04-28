@@ -13,11 +13,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// Neutral resources
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
 #ifdef _WIN32
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 #pragma code_page(1252)
 #endif //_WIN32
 
@@ -27,8 +27,8 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,3,0,0
- PRODUCTVERSION 0,3,0,0
+ FILEVERSION 1,0,0,0
+ PRODUCTVERSION 1,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x21L
@@ -41,25 +41,25 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040904e4"
+        BLOCK "000004b0"
         BEGIN
-            VALUE "FileDescription", "FARR MultiMonitor plugin"
-            VALUE "FileVersion", "0.3.0"
+            VALUE "FileDescription", "FARR Multi Monitor Plugin"
+            VALUE "FileVersion", "1.0.0"
             VALUE "InternalName", "FarrMultiMonitor.dll"
-            VALUE "LegalCopyright", "(c) 2008 Philipp Tschannen"
+            VALUE "LegalCopyright", "(c) 2009 Philipp Tschannen"
             VALUE "OriginalFilename", "FarrMultiMonitor.dll"
-            VALUE "ProductName", "FARR plugin"
-            VALUE "ProductVersion", "0.3.0"
-            VALUE "SpecialBuild", "20081013 - 0.3.0"
+            VALUE "ProductName", "FARR Multi Monitor Plugin"
+            VALUE "ProductVersion", "1.0.0"
+            VALUE "SpecialBuild", "28. April 2009"
         END
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x409, 1252
+        VALUE "Translation", 0x0, 1200
     END
 END
 
-#endif    // English (U.S.) resources
+#endif    // Neutral resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -112,13 +112,13 @@ END
 // Dialog
 //
 
-IDD_DIALOG_OPTIONS DIALOGEX 0, 0, 207, 145
+IDD_DIALOG_OPTIONS DIALOGEX 0, 0, 207, 164
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "FARR Multi Monitor"
+CAPTION "FarrMultiMonitor Options"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,96,124,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,150,124,50,14
+    DEFPUSHBUTTON   "OK",IDOK,96,143,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,150,143,50,14
     CONTROL         "Display FARR on active monitor",IDC_CHECK_USE_MULTIMON,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,7,116,10
     CONTROL         "Resize relative to screen resolution",IDC_CHECK_RESIZE_RELATIVE,
@@ -130,7 +130,10 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,80,112,10
     CONTROL         "Display on monitor where mouse is",IDC_CHECK_MOVE_TO_MOUSE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,23,46,126,10
-    CONTROL         "Enable hotkeys",IDC_CHECK_ENABLE_HOTKEYS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,101,73,10
+    CONTROL         "Enable hotkeys",IDC_CHECK_ENABLE_HOTKEYS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,122,73,10
+    CONTROL         "Resize to ",IDC_CHECK_RESIZE_PERCENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,101,42,10
+    EDITTEXT        IDC_EDIT_RESIZE_PERCENT,54,99,31,14,ES_AUTOHSCROLL | ES_NUMBER,WS_EX_RIGHT
+    LTEXT           "% of screen width",IDC_STATIC,90,102,60,8
 END
 
 
@@ -147,7 +150,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 200
         TOPMARGIN, 7
-        BOTTOMMARGIN, 138
+        BOTTOMMARGIN, 157
     END
 END
 #endif    // APSTUDIO_INVOKED

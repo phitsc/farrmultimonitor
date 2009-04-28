@@ -31,6 +31,40 @@ private:
         _optionsFile.setValue(optionName, (button.GetCheck() == BST_CHECKED));
     }
 
+    void initializeEditField(CEdit& edit, int id, const char* optionName, long defaultValue)
+    {
+        edit = GetDlgItem(id);
+        
+        std::stringstream stream;
+        stream << _optionsFile.getValue(optionName, defaultValue);
+
+        edit.SetWindowText(stream.str().c_str());
+    }
+
+    template<typename Type>
+    void storeEditFieldValue(const CEdit& edit, const char* optionName, const Type& minValue, const Type& maxValue)
+    {
+        char buffer[1024];
+        edit.GetWindowText(buffer, 1024);
+
+        std::stringstream stream;
+        stream << buffer;
+
+        Type value;
+        stream >> value;
+
+        if(value < minValue)
+        {
+            value = minValue;
+        }
+        else if(value > maxValue)
+        {
+            value = maxValue;
+        }
+
+        _optionsFile.setValue(optionName, value);
+    }
+
     LRESULT onInitDialog(UINT, WPARAM, LPARAM, BOOL&)
     {
         initializeCheckBox(_enableMultiMonitorCheck, IDC_CHECK_USE_MULTIMON, "EnableMultiMonitor", true);
@@ -40,7 +74,9 @@ private:
         initializeCheckBox(_centerCheck, IDC_CHECK_CENTER, "Center", false);
         initializeCheckBox(_alwaysCenterCheck, IDC_CHECK_ALWAYS_CENTER, "CenterAlways", false);
         initializeCheckBox(_enableHotkeysCheck, IDC_CHECK_ENABLE_HOTKEYS, "EnableHotkeys", true);
-        
+        initializeCheckBox(_resizePercentCheck, IDC_CHECK_RESIZE_PERCENT, "ResizePercent", false);
+        initializeEditField(_resizePercentValueEdit, IDC_EDIT_RESIZE_PERCENT, "ResizePercentValue", 80L);
+
         return 0;
     }
 
@@ -53,6 +89,8 @@ private:
         storeCheckBoxValue(_centerCheck, "Center");
         storeCheckBoxValue(_alwaysCenterCheck, "CenterAlways");
         storeCheckBoxValue(_enableHotkeysCheck, "EnableHotkeys");
+        storeCheckBoxValue(_resizePercentCheck, "ResizePercent");
+        storeEditFieldValue<long>(_resizePercentValueEdit, "ResizePercentValue", 10L, 100L);
 
         EndDialog(IDOK);
 
@@ -75,6 +113,9 @@ private:
     CButton _centerCheck;
     CButton _alwaysCenterCheck;
     CButton _enableHotkeysCheck;
+    CButton _resizePercentCheck;
+
+    CEdit   _resizePercentValueEdit;
 };
 
 //-----------------------------------------------------------------------

@@ -36,7 +36,7 @@ Options
 
 Credits
 ================
-The icon is from FamFamFam's silk icon set: http://www.famfamfam.com/lab/icons/silk/
+The icon is a modified version of one taken from here: http://www.visualpharm.com/
 
 
 Disclaimer
@@ -46,6 +46,9 @@ This plugin is provided 'as is'. No warranty of any kind is expressed or implied
 
 Version history
 ================
+0.4.0
+- added option to resize FARR to a certain percentage of the respective screen's width
+
 0.3.0
 - fixes 'displaying FARR on monitor with active window doesn't work anymore'
 

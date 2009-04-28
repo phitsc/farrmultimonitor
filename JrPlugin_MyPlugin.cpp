@@ -20,7 +20,7 @@
 
 
 #include "MultiMonitorPlugin.h"
-
+#include "Util.h"
 
 
 //-----------------------------------------------------------------------
@@ -127,7 +127,6 @@ HHOOK callWindowProcMessageHook = 0;
 HHOOK keyboardMessageHook = 0;
 DWORD farrThreadId = 0;
 HWND farrWindowHandle = 0;
-HWND lastActiveWindow = 0;
 
 LRESULT CALLBACK WindowProcMessageHookFunction(int code, WPARAM wParam, LPARAM lParam)
 {
@@ -140,15 +139,7 @@ LRESULT CALLBACK WindowProcMessageHookFunction(int code, WPARAM wParam, LPARAM l
 
     if((cwp->hwnd == farrWindowHandle) && (multiMonitorPlugin != 0))
     {
-        multiMonitorPlugin->handleMessage(cwp->message, cwp->wParam, cwp->lParam, lastActiveWindow);
-    }
-    else if((cwp->message == WM_ACTIVATE) && ((LOWORD(cwp->wParam) == WA_ACTIVE) || (LOWORD(cwp->wParam) == WA_CLICKACTIVE)))
-    {
-        HWND activatedWindow = (HWND)cwp->lParam;
-        if(activatedWindow != farrWindowHandle)
-        {
-            lastActiveWindow = activatedWindow;
-        }
+        multiMonitorPlugin->handleMessage(cwp->message, cwp->wParam, cwp->lParam);
     }
 
     return CallNextHookEx(NULL, code, wParam, lParam);
@@ -254,8 +245,21 @@ BOOL MyPlugin_DoShutdown()
 
 
 //-----------------------------------------------------------------------
-BOOL MyPlugin_GetStrVal(const char* varname,char *destbuf, int /*maxlen*/)
+BOOL MyPlugin_GetStrVal(const char* varname,char *destbuf, int maxlen)
 {
+    if (strcmp(varname, DEF_FieldName_VersionString)==0)
+    {
+        util::VersionInfo versionInfo(dllInstanceHandle);
+        util::String::copyString(destbuf, maxlen, versionInfo.getFileVersion().getAsString());
+        return TRUE;
+    }
+    if (strcmp(varname, DEF_FieldName_ReleaseDateString)==0)
+    {
+        util::VersionInfo versionInfo(dllInstanceHandle);
+        util::String::copyString(destbuf, maxlen, versionInfo.getSpecialBuild());
+        return TRUE;
+    }
+
     // FARR: default values for FARR fields
     if (strcmp(varname,DEF_FieldName_RegexStr)==0)
     {

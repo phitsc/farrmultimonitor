@@ -176,16 +176,6 @@ PREFUNCDEF BOOL EFuncName_GetStrVal(const char* varname,char *destbuf, int maxle
         strcpy(destbuf,ThisPlugin_DisplayName);
         return TRUE;
     }
-    if (strcmp(varname,DEF_FieldName_VersionString)==0)
-    {
-        strcpy(destbuf,ThisPlugin_VersionString);
-        return TRUE;
-    }
-    if (strcmp(varname,DEF_FieldName_ReleaseDateString)==0)
-    {
-        strcpy(destbuf,ThisPlugin_ReleaseDateString);
-        return TRUE;
-    }
     if (strcmp(varname,DEF_FieldName_Author)==0)
     {
         strcpy(destbuf,ThisPlugin_Author);

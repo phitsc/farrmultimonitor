@@ -5,6 +5,8 @@
 #include "OptionsDialog.h"
 #include "OptionsFile.h"
 
+#include "JrPlugin_GenericShell.h"
+
 #include <algorithm>
 #include <sstream>
 
@@ -26,6 +28,8 @@ void Options::update(const OptionsFile& optionsFile)
     center = optionsFile.getValue("Center", false);
     alwaysCenter = optionsFile.getValue("CenterAlways", false);
     enableHotkeys = optionsFile.getValue("EnableHotkeys", true);
+    resizePercent = optionsFile.getValue("ResizePercent", false);
+    resizePercentValue = optionsFile.getValue("ResizePercentValue", 80L);
 }
 
 //-----------------------------------------------------------------------
@@ -61,7 +65,7 @@ const util::DisplayDevice* MultiMonitorPlugin::getDisplayDeviceContainingMouse(c
 
 //-----------------------------------------------------------------------
 
-void MultiMonitorPlugin::handleMessage(UINT message, WPARAM wParam, LPARAM lParam, HWND lastActiveWindow)
+void MultiMonitorPlugin::handleMessage(UINT message, WPARAM wParam, LPARAM lParam)
 {
     //std::stringstream stream;
     //stream << "Message: " << std::hex << cwp->message << "\n";
@@ -73,7 +77,7 @@ void MultiMonitorPlugin::handleMessage(UINT message, WPARAM wParam, LPARAM lPara
 
         if(_isVisible)
         {
-            handleShowWindow(lastActiveWindow);
+            handleShowWindow(getLastWindowHandle());
         }
     }
     else if(message == WM_WINDOWPOSCHANGING)
@@ -248,7 +252,7 @@ void MultiMonitorPlugin::moveWindowFromSourceToTargetDisplayDevice(const util::D
         int newRight = 0;
         int newBottom = 0;
 
-        const int newWidth = (int)((windowRect.Width() * (_options.resizeRelative ? xRatio : 1)));
+        const int newWidth = (_options.resizePercent ? (int)((newDisplayRect.Width() * _options.resizePercentValue) / 100) : (int)((windowRect.Width() * (_options.resizeRelative ? xRatio : 1))));
         const int newHeight = (int)((windowRect.Height() * (_options.resizeRelative ? yRatio : 1)));
 
         if(_options.center)
@@ -335,6 +339,22 @@ void MultiMonitorPlugin::showOptions()
     {
         _options.update(_optionsFile);
     }
+}
+
+//-----------------------------------------------------------------------
+
+HWND MultiMonitorPlugin::getLastWindowHandle()
+{
+    char lastWindowHandleAsString[16];
+    callbackfp_get_strval(hostptr, "resolve:%LASTHWND%", lastWindowHandleAsString, 16);
+
+    std::stringstream stream;
+    stream << lastWindowHandleAsString;
+
+    long lastWindowHandle;
+    stream >> lastWindowHandle;
+
+    return (HWND)lastWindowHandle;
 }
 
 //-----------------------------------------------------------------------

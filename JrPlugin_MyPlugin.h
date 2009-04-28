@@ -49,11 +49,9 @@
 // Plugin defines refered to in JrPlugin_GenericShell.cpp
 // IMPORTANT: you need to customize there
 //
-#define ThisPlugin_DisplayName			"FARR Multi Monitor Plugin"
-#define ThisPlugin_VersionString		"0.3.0"
-#define ThisPlugin_ReleaseDateString	"13. October 2008"
+#define ThisPlugin_DisplayName			"FarrMultiMonitor"
 #define ThisPlugin_Author			    "Philipp Tschannen (phitsc)"
-#define ThisPlugin_HomepageURL			"http://farrmultimonitor.origo.ethz.ch"
+#define ThisPlugin_HomepageURL			"http://farrmultimonitor.objecttechnology.com"
 #define ThisPlugin_UpdateURL			""
 #define ThisPlugin_ShortDescription		"Display FARR on active monitor and/or center FARR main window."
 #define ThisPlugin_LongDescription		"Adds support for multiple monitors by displaying the FARR main window on the currently active monitor and/or allows centering the FARR main window on the screen."
