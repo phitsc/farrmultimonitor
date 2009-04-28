@@ -112,7 +112,8 @@ bool MultiMonitorPlugin::handleKeyboardMessage(WPARAM wParam, LPARAM lParam)
 {
     if(_isVisible && _options.enableHotkeys)
     {
-        bool winKeyPressed = ((GetKeyState(VK_LWIN) & 0x8000) == 0x8000);
+        const bool winKeyPressed = ((GetKeyState(VK_LWIN) & 0x8000) == 0x8000);
+        const bool ctrlKeyPressed = ((GetKeyState(VK_CONTROL) & 0x8000) == 0x8000);
 
         if(winKeyPressed)
         {
@@ -149,30 +150,37 @@ bool MultiMonitorPlugin::handleKeyboardMessage(WPARAM wParam, LPARAM lParam)
 
                     return true;
                 }
+            }
 
-            case VK_0:
-            case VK_1:
-            case VK_2:
-            case VK_3:
-            case VK_4:
-            case VK_5:
-            case VK_6:
-            case VK_7:
-            case VK_8:
-            case VK_9:
+            if(ctrlKeyPressed)
+            {
+                switch(wParam)
                 {
-                    if(keyPressed)
+                case VK_0:
+                case VK_1:
+                case VK_2:
+                case VK_3:
+                case VK_4:
+                case VK_5:
+                case VK_6:
+                case VK_7:
+                case VK_8:
+                case VK_9:
                     {
-                        const long index = wParam - VK_0;
-                        const long percent = (index == 0) ? 100L : (index * 10L);
+                        if(keyPressed)
+                        {
+                            const long index = wParam - VK_0;
+                            const long percent = (index == 0) ? 100L : (index * 10L);
 
-                        _options.resizePercentValue = percent;
-                        _optionsFile.setValue("ResizePercentValue", percent);
+                            _options.resizePercentValue = percent;
+                            _optionsFile.setValue("ResizePercentValue", percent);
 
-                        moveToNextLastDisplayDevice(SameMonitor, percent);
+                            moveToNextLastDisplayDevice(SameMonitor, percent);
+
+                        }
+
+                        return true;
                     }
-
-                    return true;
                 }
             }
         }

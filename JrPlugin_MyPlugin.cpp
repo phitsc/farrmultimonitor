@@ -152,7 +152,7 @@ LRESULT CALLBACK KeyboardHookFunction(int code, WPARAM wParam, LPARAM lParam)
         return CallNextHookEx(NULL, code, wParam, lParam);
     }
 
-    if(multiMonitorPlugin != 0)
+    if((GetForegroundWindow() == farrWindowHandle) && (multiMonitorPlugin != 0))
     {
         if(multiMonitorPlugin->handleKeyboardMessage(wParam, lParam))
         {
