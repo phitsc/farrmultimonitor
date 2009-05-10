@@ -26,8 +26,10 @@ struct Options
     bool center;
     bool alwaysCenter;
     bool enableHotkeys;
-    bool resizePercent;
-    long resizePercentValue;
+    bool resizePercentH;
+    long resizePercentValueH;
+    bool resizePercentV;
+    long resizePercentValueV;
 };
 
 //-----------------------------------------------------------------------
@@ -51,8 +53,8 @@ private:
         LastMonitor,
         SameMonitor
     };
-    void moveToNextLastDisplayDevice(Where toWhere, long percent = 0);
-    void moveWindowFromSourceToTargetDisplayDevice(const util::DisplayDevice* source, const util::DisplayDevice* target, long percent = 0);
+    void moveToNextLastDisplayDevice(Where toWhere, long percentH = 0, long percentV = 0);
+    void moveWindowFromSourceToTargetDisplayDevice(const util::DisplayDevice* source, const util::DisplayDevice* target, long percentH = 0, long percentV = 0);
 
     static const util::DisplayDevice* getDisplayDevice(const util::DisplayDevices& displayDevices, HWND hWnd);
     static const util::DisplayDevice* getDisplayDeviceContainingMouse(const util::DisplayDevices& displayDevices);

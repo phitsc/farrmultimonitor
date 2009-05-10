@@ -28,8 +28,10 @@ void Options::update(const OptionsFile& optionsFile)
     center = optionsFile.getValue("Center", false);
     alwaysCenter = optionsFile.getValue("CenterAlways", false);
     enableHotkeys = optionsFile.getValue("EnableHotkeys", true);
-    resizePercent = optionsFile.getValue("ResizePercent", false);
-    resizePercentValue = optionsFile.getValue("ResizePercentValue", 80L);
+    resizePercentH = optionsFile.getValue("ResizePercent", false);
+    resizePercentValueH = optionsFile.getValue("ResizePercentValue", 80L);
+    resizePercentV = optionsFile.getValue("ResizePercentV", false);
+    resizePercentValueV = optionsFile.getValue("ResizePercentValueV", 80L);
 }
 
 //-----------------------------------------------------------------------
@@ -114,6 +116,7 @@ bool MultiMonitorPlugin::handleKeyboardMessage(WPARAM wParam, LPARAM lParam)
     {
         const bool winKeyPressed = ((GetKeyState(VK_LWIN) & 0x8000) == 0x8000);
         const bool ctrlKeyPressed = ((GetKeyState(VK_CONTROL) & 0x8000) == 0x8000);
+        const bool shiftKeyPressed = ((GetKeyState(VK_SHIFT) & 0x8000) == 0x8000);
 
         if(winKeyPressed)
         {
@@ -172,11 +175,20 @@ bool MultiMonitorPlugin::handleKeyboardMessage(WPARAM wParam, LPARAM lParam)
                             const long index = wParam - VK_0;
                             const long percent = (index == 0) ? 100L : (index * 10L);
 
-                            _options.resizePercentValue = percent;
-                            _optionsFile.setValue("ResizePercentValue", percent);
+                            if(shiftKeyPressed)
+                            {
+                                _options.resizePercentValueV = percent;
+                                _optionsFile.setValue("ResizePercentValueV", percent);
 
-                            moveToNextLastDisplayDevice(SameMonitor, percent);
+                                moveToNextLastDisplayDevice(SameMonitor, 0, percent);
+                            }
+                            else
+                            {
+                                _options.resizePercentValueH = percent;
+                                _optionsFile.setValue("ResizePercentValueH", percent);
 
+                                moveToNextLastDisplayDevice(SameMonitor, percent, 0);
+                            }
                         }
 
                         return true;
@@ -191,7 +203,7 @@ bool MultiMonitorPlugin::handleKeyboardMessage(WPARAM wParam, LPARAM lParam)
 
 //-----------------------------------------------------------------------
 
-void MultiMonitorPlugin::moveToNextLastDisplayDevice(Where toWhere, long percent)
+void MultiMonitorPlugin::moveToNextLastDisplayDevice(Where toWhere, long percentH, long percentV)
 {
     const util::DisplayDevices displayDevices;
 
@@ -247,7 +259,7 @@ void MultiMonitorPlugin::moveToNextLastDisplayDevice(Where toWhere, long percent
         }
     }
 
-    moveWindowFromSourceToTargetDisplayDevice(currentDisplayDevice, newDisplayDevice, percent);
+    moveWindowFromSourceToTargetDisplayDevice(currentDisplayDevice, newDisplayDevice, percentH, percentV);
 }
 
 //-----------------------------------------------------------------------
@@ -284,7 +296,7 @@ void MultiMonitorPlugin::handleShowWindow(HWND lastActiveWindow)
 
 //-----------------------------------------------------------------------
 
-void MultiMonitorPlugin::moveWindowFromSourceToTargetDisplayDevice(const util::DisplayDevice* currentDisplayDevice, const util::DisplayDevice* newDisplayDevice, long percent)
+void MultiMonitorPlugin::moveWindowFromSourceToTargetDisplayDevice(const util::DisplayDevice* currentDisplayDevice, const util::DisplayDevice* newDisplayDevice, long percentH, long percentV)
 {
     if((currentDisplayDevice != 0) && (newDisplayDevice != 0))
     {
@@ -305,9 +317,11 @@ void MultiMonitorPlugin::moveWindowFromSourceToTargetDisplayDevice(const util::D
         int newRight = 0;
         int newBottom = 0;
 
-        const long resizePercentValue = (percent == 0) ? _options.resizePercentValue : percent;
-        const int newWidth = ((_options.resizePercent || (percent != 0))? (int)((newDisplayRect.Width() * resizePercentValue) / 100) : (int)((windowRect.Width() * (_options.resizeRelative ? xRatio : 1))));
-        const int newHeight = (int)((windowRect.Height() * (_options.resizeRelative ? yRatio : 1)));
+        const long resizePercentValueH = (percentH == 0) ? _options.resizePercentValueH : percentH;
+        const int newWidth = ((_options.resizePercentH || (percentH != 0)) ? (int)((newDisplayRect.Width() * resizePercentValueH) / 100) : (int)((windowRect.Width() * (_options.resizeRelative ? xRatio : 1))));
+
+        const long resizePercentValueV = (percentV == 0) ? _options.resizePercentValueV : percentV;
+        const int newHeight = ((_options.resizePercentV || (percentV != 0)) ? (int)((newDisplayRect.Height() * resizePercentValueV) / 100) : (int)((windowRect.Height() * (_options.resizeRelative ? yRatio : 1))));
 
         if(_options.center)
         {

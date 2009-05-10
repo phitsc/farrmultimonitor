@@ -1,6 +1,6 @@
 ===============================================================================
 
-FARR MultiMonitor plugin - 1.0.0 - 28. April 2009
+FARR MultiMonitor plugin - 1.1.0 - 10. May 2009
 
 (c) 2009 Philipp Tschannen
 
@@ -29,10 +29,11 @@ Options
 - and whenver it changes size: will center FARR whenever its size changes
 
 - Enable hotkeys: enable moving FARR window to next/last monitor and centering with hotkeys
-    Win + Left           : move FARR window to monitor on the left
-    Win + Right          : move FARR window to monitor on the right
-    Win + Home           : center FARR window
-    Win + Ctrl + 1 .. 0  : resize FARR window to 10% .. 100% of current screen's width
+    Win + Left                  : move FARR window to monitor on the left
+    Win + Right                 : move FARR window to monitor on the right
+    Win + Home                  : center FARR window
+    Win + Ctrl + 1 .. 0         : resize FARR window to 10% .. 100% of current screen's width
+    Win + Ctrl + Shift + 1 .. 0 : resize FARR window to 10% .. 100% of current screen's height
 
 
 Credits
@@ -47,7 +48,11 @@ This plugin is provided 'as is'. No warranty of any kind is expressed or implied
 
 Version history
 ================
-1.0.0 - 28. April 2008
+1.1.0 - 10. May 2009
+- added option to resize FARR to a certain percentage of the screen's height when it's activated (make sure to disable FARR auto-shrink option)
+- added hotkeys Win + Ctrl + Shift + 1 .. 0 to resize FARR to a certain percentage of the screen's height
+
+1.0.0 - 28. April 2009
 - added option to resize FARR to a certain percentage of the screen's width when it's activated
 - added hotkeys Win + Ctrl + 1 .. 0 to resize FARR to a certain percentage of the screen's width
 

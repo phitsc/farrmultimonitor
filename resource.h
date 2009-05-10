@@ -10,9 +10,10 @@
 #define IDC_CHECK_ALWAYS_CENTER         3004
 #define IDC_CHECK_MOVE_TO_MOUSE         3006
 #define IDC_CHECK_ENABLE_HOTKEYS        3007
-#define IDC_CHECK_RESIZE_PERCENT        3008
-#define IDC_EDIT_RESIZE_PERCENT         3010
-#define IDC_SPIN_RESIZE_PERCENT         3011
+#define IDC_CHECK_RESIZE_H              3008
+#define IDC_CHECK_RESIZE_V              3009
+#define IDC_EDIT_RESIZE_H               3010
+#define IDC_EDIT_RESIZE_V               3011
 
 // Next default values for new objects
 // 

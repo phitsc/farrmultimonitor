@@ -74,8 +74,10 @@ private:
         initializeCheckBox(_centerCheck, IDC_CHECK_CENTER, "Center", false);
         initializeCheckBox(_alwaysCenterCheck, IDC_CHECK_ALWAYS_CENTER, "CenterAlways", false);
         initializeCheckBox(_enableHotkeysCheck, IDC_CHECK_ENABLE_HOTKEYS, "EnableHotkeys", true);
-        initializeCheckBox(_resizePercentCheck, IDC_CHECK_RESIZE_PERCENT, "ResizePercent", false);
-        initializeEditField(_resizePercentValueEdit, IDC_EDIT_RESIZE_PERCENT, "ResizePercentValue", 80L);
+        initializeCheckBox(_resizeHCheck, IDC_CHECK_RESIZE_H, "ResizePercent", false);
+        initializeCheckBox(_resizeVCheck, IDC_CHECK_RESIZE_V, "ResizePercentV", false);
+        initializeEditField(_resizeHValueEdit, IDC_EDIT_RESIZE_H, "ResizePercentValue", 80L);
+        initializeEditField(_resizeVValueEdit, IDC_EDIT_RESIZE_V, "ResizePercentValueV", 80L);
 
         return 0;
     }
@@ -89,8 +91,10 @@ private:
         storeCheckBoxValue(_centerCheck, "Center");
         storeCheckBoxValue(_alwaysCenterCheck, "CenterAlways");
         storeCheckBoxValue(_enableHotkeysCheck, "EnableHotkeys");
-        storeCheckBoxValue(_resizePercentCheck, "ResizePercent");
-        storeEditFieldValue<long>(_resizePercentValueEdit, "ResizePercentValue", 10L, 100L);
+        storeCheckBoxValue(_resizeHCheck, "ResizePercent");
+        storeCheckBoxValue(_resizeVCheck, "ResizePercentV");
+        storeEditFieldValue<long>(_resizeHValueEdit, "ResizePercentValue", 10L, 100L);
+        storeEditFieldValue<long>(_resizeVValueEdit, "ResizePercentValueV", 10L, 100L);
 
         EndDialog(IDOK);
 
@@ -113,9 +117,11 @@ private:
     CButton _centerCheck;
     CButton _alwaysCenterCheck;
     CButton _enableHotkeysCheck;
-    CButton _resizePercentCheck;
+    CButton _resizeHCheck;
+    CButton _resizeVCheck;
 
-    CEdit   _resizePercentValueEdit;
+    CEdit   _resizeHValueEdit;
+    CEdit   _resizeVValueEdit;
 };
 
 //-----------------------------------------------------------------------
