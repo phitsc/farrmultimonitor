@@ -1,2 +1,0 @@
-C:\Projects\UpdateVersion\Deploy\UpdateVersion.exe -s c:\Projects\FarrMultiMonitor\Deploy\FarrMultiMonitor.dll -t c:\Projects\FarrMultiMonitor\Deploy\FarrMultiMonitor.dcupdate -t c:\Projects\FarrMultiMonitor\Deploy\versioninfo.xml
-"C:\Program Files\7-Zip\7z.exe" a FarrMultiMonitor.zip c:\Projects\FarrMultiMonitor\Deploy\*.* -r -xr!.svn -x!versioninfo.xml -x!_Deploy.bat -x!*.zip -tzip
