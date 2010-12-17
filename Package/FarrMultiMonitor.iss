@@ -6,6 +6,7 @@ OutputBaseFilename=FarrMultiMonitorSetup
 Uninstallable=no
 Compression=lzma2
 SolidCompression=yes
+DirExistsWarning=no
 
 [Files]
 Source: "..\Deploy\CloseApp2.dll"; DestDir: "{tmp}"; Flags: onlyifdoesntexist
